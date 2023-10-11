@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="com.team3web.shop.mapper.UserMapper">
+
+	<!-- 저장하기 : 회원 가입 -->
+	<insert id="insertUser" parameterType="UserVO">
+   		insert into shop_user
+      		(id, password, name, gender, phone, nickname, zipcode, address, birthday, joindate)
+   		values 
+      		(#{id}, #{password}, #{name}, #{gender}, #{phone}, #{nickname}, #{zipcode}, #{address}, #{birthday}, to_char(sysdate, 'YYYYMMDD HH24:MI:SS'))
+	</insert>
+
+	
+	<!-- 수정하기 : 회원 정보 수정 -->
+	<update id="updateUser" parameterType="UserVO">
+		update
+		shop_user
+		set
+		phone = #{phone},
+		nickname = #{nickname},
+		zipcode = #{zipcode},
+		address = #{address}
+	    password = #{password}
+		where
+		id=#{id}
+	</update>
+	
+	<!-- 삭제하기 : 회원 탈퇴 -->
+	<delete id="deleteUser" parameterType="String">
+		delete from shop_user where
+		id=#{id}
+	</delete>
+
+	<!-- 1개얻기하기 : 수정/삭제/로그인 -->
+	<select id="selectById" parameterType="String" resultType="UserVO">
+		select *
+		from shop_user where id=#{id}
+	</select>
+
+	<!-- 동일한 아이디 개수세기 : 아이디 중복 확인 -->
+	<select id="selectCountByid" parameterType="String"
+		resultType="String">
+		select count(*) from shop_user where id=#{id}
+	</select>
+
+	<!-- 아이디로 찾기 -->
+	<select id="selectByid" parameterType="String"
+		resultType="UserVO">
+		select * from shop_user where id=#{id}
+	</select>
+
+	<!-- 이름으로 찾기 -->
+	<select id="selectByname" parameterType="String"
+		resultType="UserVO">
+		select * from shop_user where name=#{name}
+	</select>
+	
+	<!-- 닉네임으로 사용자 조회 -->
+	<select id="getUserByNickname" parameterType="String" resultType="UserVO">
+    	select *
+   		from shop_user
+    	where nickname = #{nickname}
+	</select>
+	
+	<!-- 사용자의 등급(VERIFY) 가져오기 -->
+	<select id="getUserRole" parameterType="String" resultType="int">
+    	SELECT VERIFY FROM shop_user WHERE id = #{id}
+	</select>
+	
+	<!-- 사용자 아이디로 사용자 정보 가져오기 -->
+	<select id="getUserById" parameterType="String" resultType="UserVO">
+    	SELECT *
+    	FROM shop_user
+    	WHERE id = #{id}
+	</select>
+
+	<!-- 사용여부 변경하기 -->
+	<update id="updateEnabled" parameterType="hashmap">
+		update shop_user set
+		enabled = #{enabled} where id=#{id}
+	</update>
+	<!-- 비밀번호 변경하기 -->
+	<update id="updatePassword" parameterType="hashmap">
+		update shop_user set
+		password = #{password} where id=#{id} and name=#{name}
+	</update>
+	
+	<!-- 개수 얻기 : 관리자모드 -->
+	<!-- select id="selectCount" resultType="int">
+		select count(*) from smember
+	</select-->
+
+	<!-- 모두 얻기 : 관리자모드 -->
+	<!-- select id="selectAll" resultType="UserVO">
+		select * from smember order by
+		idx desc
+	</select-->
+	
+	</mapper>
